@@ -1,4 +1,4 @@
-import { createReducer, on, Action } from '@ngrx/store';
+import { createReducer, on, Action, ActionReducerMap } from '@ngrx/store';
 import * as AuthActions from './auth.actions';
 
 export interface AuthState {
@@ -27,19 +27,51 @@ export const initialState: AuthState = {
   error: ''
 };
 
-const reducer = createReducer(
+export const authReducer = createReducer(
   initialState,
-  on(AuthActions.authGetTokensSuccess, (state, action) => {
+  on(AuthActions.authGetTokensSuccess, (state, action) => ({
+    ...state,
+    isAuthenticated: true,
+    accessToken: action.tokens.access_token,
+    idToken: action.tokens.id_token,
+    refreshToken: action.tokens.refresh_token,
+    tokenExpiration: AuthReducerUtil.getExpirationDate(
+      action.tokens.expires_in
+    ),
+    isRefreshingTokens: false
+  })),
+  on(AuthActions.authGetTokensFailure, (state, action) => ({
+    ...state,
+    error: 'Auth Get Tokens Error: ' + action.error
+  })),
+  on(AuthActions.authRefreshTokens, (state, action) => ({
+    ...state,
+    accessToken: '',
+    idToken: '',
+    isRefreshingTokens: true
+  })),
+  on(AuthActions.authRefreshTokensSuccess, (state, action) => ({
+    ...state,
+    accessToken: action.tokens.access_token,
+    idToken: action.tokens.id_token,
+    tokenExpiration: AuthReducerUtil.getExpirationDate(
+      action.tokens.expires_in
+    ),
+    isRefreshingTokens: false
+  })),
+  on(AuthActions.authRefreshTokensFailure, (state, action) => ({
+    ...state,
+    error: 'Auth Refresh Tokens Error: ' + action.error
+  })),
+  on(AuthActions.authLogout, () => initialState)
+);
+
+class AuthReducerUtil {
+  static getExpirationDate(secondsUntilExpiration: number): string {
     let expirationDate = new Date();
-    expirationDate.setSeconds(expirationDate.getSeconds() + action.tokens.expires_in);
-    return {
-      ...state,
-      isAuthenticated: true,
-      accessToken: action.tokens.access_token,
-      idToken: action.tokens.id_token,
-      refreshToken: action.tokens.refresh_token,
-      tokenExpiration: expirationDate.toISOString,
-      isRefreshingTokens: false
-    }
-  })
-)
+    expirationDate.setSeconds(
+      expirationDate.getSeconds() + secondsUntilExpiration
+    );
+    return expirationDate.toISOString();
+  }
+}
