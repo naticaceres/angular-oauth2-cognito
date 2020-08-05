@@ -7,6 +7,8 @@ import { HelloComponent } from './hello.component';
 import { MatButtonModule } from '@angular/material/button';
 import { StoreModule } from '@ngrx/store';
 import { reducers } from './app.state';
+import { AppRoutingModule } from './app-routing.module';
+import { SampleAuthorizedComponent } from './sample-authorized/sample-authorized.component';
 
 @NgModule({
   imports: [
@@ -14,10 +16,13 @@ import { reducers } from './app.state';
     FormsModule,
     MatButtonModule,
 
+    // app
+    AppRoutingModule,
+
     //ngrx
     StoreModule.forRoot(reducers)
   ],
-  declarations: [AppComponent, HelloComponent],
+  declarations: [AppComponent, HelloComponent, SampleAuthorizedComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
