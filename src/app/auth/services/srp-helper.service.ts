@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments';
+import { environment } from '../../../environments';
 import * as CryptoJS from 'crypto-js/core';
 import SHA256 from 'crypto-js/sha256';
 import { Observable } from 'rxjs';

@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { DOCUMENT } from '@angular/common';
-import { environment } from 'src/environments';
+import { environment } from '../../../environments';
 import { Observable } from 'rxjs';
 import { OAuthTokens } from '../model/oauth-tokens.model';
 

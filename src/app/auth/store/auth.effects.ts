@@ -13,7 +13,7 @@ import {
   catchError,
   filter
 } from 'rxjs/operators';
-import { environment } from 'src/environments';
+import { environment } from '../../../environments';
 import { of } from 'rxjs';
 import { Router } from '@angular/router';
 import { CustomAuthService } from '../services/custom-auth.service';
