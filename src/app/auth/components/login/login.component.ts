@@ -24,6 +24,7 @@ export class LoginComponent implements OnInit {
 
     if (!!authCode) {
       this.store.dispatch(authGetTokens({ authCode, requestedUrl }));
+      return;
     }
 
     this.store

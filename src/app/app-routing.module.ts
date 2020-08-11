@@ -1,16 +1,21 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { AppComponent } from './app.component';
-import { SampleAuthorizedComponent } from './sample-authorized/sample-authorized.component';
 import { AuthGuard } from './auth/guard/auth.guard';
 import { LoginComponent } from './auth/components/login/login.component';
 import { LogoutComponent } from './auth/components/logout/logout.component';
+import { LandingComponent } from './components/landing/landing.component';
+import { SampleAuthorizedComponent } from './components/sample-authorized/sample-authorized.component';
+import { CustomLoginComponent } from './auth/components/custom-login/custom-login.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: AppComponent
+    redirectTo: 'landing',
+    pathMatch: 'full'
+  },
+  {
+    path: 'landing',
+    component: LandingComponent
   },
   {
     path: 'sample-authorized',
@@ -18,7 +23,8 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   { path: 'login', component: LoginComponent },
-  { path: 'logout', component: LogoutComponent }
+  { path: 'logout', component: LogoutComponent },
+  { path: 'login-custom', component: CustomLoginComponent }
 ];
 
 @NgModule({

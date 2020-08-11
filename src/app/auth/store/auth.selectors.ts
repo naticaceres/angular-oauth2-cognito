@@ -4,36 +4,36 @@ import { selectAuthState } from 'src/app/app.state';
 export const selectAuth = createSelector(selectAuthState, (state) => state);
 
 export const selectIsAuthenticated = createSelector(
-  selectAuthState,
+  selectAuth,
   (state) => state.isAuthenticated
 );
 
 export const selectAuthVerifier = createSelector(
-  selectAuthState,
+  selectAuth,
   (state) => state.verifier
 );
 
 export const selectIdToken = createSelector(
-  selectAuthState,
+  selectAuth,
   (state) => state.idToken
 );
 
 export const selectAccessToken = createSelector(
-  selectAuthState,
+  selectAuth,
   (state) => state.accessToken
 );
 
 export const selectTokenExpirationTime = createSelector(
-  selectAuthState,
+  selectAuth,
   (state) => state.tokenExpiration
 );
 
 export const selectRefreshToken = createSelector(
-  selectAuthState,
+  selectAuth,
   (state) => state.refreshToken
 );
 
 export const selectIsRefreshingToken = createSelector(
-  selectAuthState,
+  selectAuth,
   (state) => state.isRefreshingTokens
 );

@@ -1,15 +1,15 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { LoginComponent } from './components/login/login.component';
 import { LogoutComponent } from './components/logout/logout.component';
 import { AuthService } from './services/auth.service';
 import { CodeVerifierService } from './services/code-verifier.service';
-import { StoreModule } from '@ngrx/store';
-import * as AuthState from './store/auth.reducer';
+import { CustomLoginComponent } from './components/custom-login/custom-login.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  imports: [CommonModule],
-  declarations: [LoginComponent, LogoutComponent],
-  providers: [AuthService, CodeVerifierService]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  declarations: [LoginComponent, LogoutComponent, CustomLoginComponent],
+  providers: [AuthService, CodeVerifierService, DatePipe]
 })
 export class AuthModule {}
