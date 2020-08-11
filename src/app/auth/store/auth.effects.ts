@@ -13,12 +13,12 @@ import {
   catchError,
   filter
 } from 'rxjs/operators';
-import { LocalStorageService } from 'src/app/local-storage/local-storage.service';
 import { environment } from 'src/environments';
 import { of } from 'rxjs';
 import { Router } from '@angular/router';
 import { CustomAuthService } from '../services/custom-auth.service';
 import { AuthenticationData } from '../model/authentication-data.model';
+import { LocalStorageService } from '../../local-storage/local-storage.service';
 
 @Injectable()
 export class AuthEffects {
@@ -158,16 +158,14 @@ export class AuthEffects {
           username: action.email,
           password: action.password
         };
-        return this.customAuthService
-          .initiateLogIn(authData)
-          .pipe(
-            map((loginChallenge) =>
-              AuthActions.customRespondAuthChallenge({
-                loginChallenge,
-                authData
-              })
-            )
-          );
+        return this.customAuthService.initiateLogIn(authData).pipe(
+          map((loginChallenge) =>
+            AuthActions.customRespondAuthChallenge({
+              loginChallenge,
+              authData
+            })
+          )
+        );
       })
     )
   );

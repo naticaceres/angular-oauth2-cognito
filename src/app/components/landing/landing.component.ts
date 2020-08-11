@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { authInitiateLogin } from 'src/app/auth/store/auth.actions';
 import { Router } from '@angular/router';
 
 @Component({
