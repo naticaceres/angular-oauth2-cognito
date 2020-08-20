@@ -1,17 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
-import { authGetTokens, authInitiateLogin } from '../../store/auth.actions';
+import {
+  authGetTokens,
+  authInitiateLogin
+} from '../../store/auth-code.actions';
 import { take, map } from 'rxjs/operators';
-import { selectIsAuthenticated } from '../../store/auth.selectors';
+import { selectIsAuthenticated } from '../../store/auth-code.selectors';
 import { noop } from 'rxjs';
 
 @Component({
   selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  templateUrl: './code-login.component.html',
+  styleUrls: ['./code-login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class CodeLoginComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private store: Store,

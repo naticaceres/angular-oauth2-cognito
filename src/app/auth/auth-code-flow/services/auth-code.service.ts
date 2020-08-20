@@ -1,12 +1,12 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { DOCUMENT } from '@angular/common';
-import { environment } from '../../../environments';
 import { Observable } from 'rxjs';
 import { OAuthTokens } from '../model/oauth-tokens.model';
+import { environment } from 'src/environments';
 
 @Injectable()
-export class AuthService {
+export class AuthCodeService {
   hostedUiUri = environment.Auth.hostedUiUrl;
   constructor(
     private http: HttpClient,

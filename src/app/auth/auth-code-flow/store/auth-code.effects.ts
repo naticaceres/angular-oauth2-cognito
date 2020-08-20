@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { ofType, createEffect, Actions } from '@ngrx/effects';
-import { AuthService } from '../services/auth.service';
+import { AuthCodeService } from '../services/auth-code.service';
 import { Store } from '@ngrx/store';
 import { CodeVerifierService } from '../services/code-verifier.service';
-import * as AuthActions from './auth.actions';
-import * as AuthSelectors from './auth.selectors';
+import * as AuthActions from './auth-code.actions';
+import * as AuthSelectors from './auth-code.selectors';
 import {
   tap,
   withLatestFrom,
@@ -13,23 +13,20 @@ import {
   catchError,
   filter
 } from 'rxjs/operators';
-import { environment } from '../../../environments';
-import { of } from 'rxjs';
+import { LocalStorageService } from 'src/app/local-storage/local-storage.service';
 import { Router } from '@angular/router';
-import { CustomAuthService } from '../services/custom-auth.service';
-import { AuthenticationData } from '../model/authentication-data.model';
-import { LocalStorageService } from '../../local-storage/local-storage.service';
+import { environment } from 'src/environments';
+import { of } from 'rxjs';
 
 @Injectable()
-export class AuthEffects {
+export class AuthCodeEffects {
   constructor(
     private actions$: Actions,
-    private authService: AuthService,
+    private authService: AuthCodeService,
     private store: Store,
     private codeVerifierService: CodeVerifierService,
     private localStorageService: LocalStorageService,
-    private router: Router,
-    private customAuthService: CustomAuthService
+    private router: Router
   ) {}
 
   initiateLoginEffect = createEffect(
@@ -147,42 +144,5 @@ export class AuthEffects {
         )
       )
     )
-  );
-
-  // custom login
-  initiateCustomLoginEffect = createEffect(() =>
-    this.actions$.pipe(
-      ofType(AuthActions.customAuthInitiateLogin),
-      switchMap((action) => {
-        const authData: AuthenticationData = {
-          username: action.email,
-          password: action.password
-        };
-        return this.customAuthService.initiateLogIn(authData).pipe(
-          map((loginChallenge) =>
-            AuthActions.customRespondAuthChallenge({
-              loginChallenge,
-              authData
-            })
-          )
-        );
-      })
-    )
-  );
-
-  respondAuthChallengeEffect = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(AuthActions.customRespondAuthChallenge),
-        switchMap((action) => {
-          return this.customAuthService.respondToAuthChallenge(
-            action.loginChallenge,
-            action.authData
-          );
-        })
-      ),
-    {
-      dispatch: false
-    }
   );
 }

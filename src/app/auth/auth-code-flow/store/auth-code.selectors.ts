@@ -1,39 +1,42 @@
 import { createSelector } from '@ngrx/store';
-import { selectAuthState } from '../../app.state';
+import { selectAuthState } from '../../store/auth.reducer';
 
-export const selectAuth = createSelector(selectAuthState, (state) => state);
+export const selectAuthCodeState = createSelector(
+  selectAuthState,
+  (auth) => auth.authCode
+);
 
 export const selectIsAuthenticated = createSelector(
-  selectAuth,
+  selectAuthCodeState,
   (state) => state.isAuthenticated
 );
 
-export const selectAuthVerifier = createSelector(
-  selectAuth,
+export const selectAuthCodeStateVerifier = createSelector(
+  selectAuthCodeState,
   (state) => state.verifier
 );
 
 export const selectIdToken = createSelector(
-  selectAuth,
+  selectAuthCodeState,
   (state) => state.idToken
 );
 
 export const selectAccessToken = createSelector(
-  selectAuth,
+  selectAuthCodeState,
   (state) => state.accessToken
 );
 
 export const selectTokenExpirationTime = createSelector(
-  selectAuth,
+  selectAuthCodeState,
   (state) => state.tokenExpiration
 );
 
 export const selectRefreshToken = createSelector(
-  selectAuth,
+  selectAuthCodeState,
   (state) => state.refreshToken
 );
 
 export const selectIsRefreshingToken = createSelector(
-  selectAuth,
+  selectAuthCodeState,
   (state) => state.isRefreshingTokens
 );

@@ -1,77 +1,34 @@
-import { createReducer, on, Action, ActionReducerMap } from '@ngrx/store';
-import * as AuthActions from './auth.actions';
+import {
+  ActionReducerMap,
+  createFeatureSelector,
+  createSelector
+} from '@ngrx/store';
+import {
+  authCodeReducer,
+  AuthCodeState
+} from '../auth-code-flow/store/auth-code.reducer';
+import {
+  srpAuthReducer,
+  SrpAuthState
+} from '../auth-srp-flow/store/srp-auth.reducer';
+import * as fromRoot from '../../app.state';
 
-export interface AuthState {
-  verifier: string;
-  lastVisitedUrl: string;
-  isAuthenticated: boolean;
-  user: any;
-  accessToken: string;
-  idToken: string;
-  refreshToken: string;
-  tokenExpiration: string;
-  isRefreshingTokens: boolean;
-  error: string;
-}
+export const FEATURE_NAME = 'auth';
 
-export const initialState: AuthState = {
-  verifier: '',
-  lastVisitedUrl: '',
-  isAuthenticated: false,
-  user: null,
-  accessToken: '',
-  idToken: '',
-  refreshToken: '',
-  tokenExpiration: '',
-  isRefreshingTokens: false,
-  error: ''
+export const authReducers: ActionReducerMap<AuthState> = {
+  authCode: authCodeReducer,
+  authSrp: srpAuthReducer
 };
 
-export const authReducer = createReducer(
-  initialState,
-  on(AuthActions.authGetTokensSuccess, (state, action) => ({
-    ...state,
-    isAuthenticated: true,
-    accessToken: action.tokens.access_token,
-    idToken: action.tokens.id_token,
-    refreshToken: action.tokens.refresh_token,
-    tokenExpiration: AuthReducerUtil.getExpirationDate(
-      action.tokens.expires_in
-    ),
-    isRefreshingTokens: false
-  })),
-  on(AuthActions.authGetTokensFailure, (state, action) => ({
-    ...state,
-    error: 'Auth Get Tokens Error: ' + action.error
-  })),
-  on(AuthActions.authRefreshTokens, (state, action) => ({
-    ...state,
-    accessToken: '',
-    idToken: '',
-    isRefreshingTokens: true
-  })),
-  on(AuthActions.authRefreshTokensSuccess, (state, action) => ({
-    ...state,
-    accessToken: action.tokens.access_token,
-    idToken: action.tokens.id_token,
-    tokenExpiration: AuthReducerUtil.getExpirationDate(
-      action.tokens.expires_in
-    ),
-    isRefreshingTokens: false
-  })),
-  on(AuthActions.authRefreshTokensFailure, (state, action) => ({
-    ...state,
-    error: 'Auth Refresh Tokens Error: ' + action.error
-  })),
-  on(AuthActions.authLogout, () => initialState)
-);
-
-class AuthReducerUtil {
-  static getExpirationDate(secondsUntilExpiration: number): string {
-    let expirationDate = new Date();
-    expirationDate.setSeconds(
-      expirationDate.getSeconds() + secondsUntilExpiration
-    );
-    return expirationDate.toISOString();
-  }
+export interface AuthState {
+  authCode: AuthCodeState;
+  authSrp: SrpAuthState;
 }
+
+export interface State extends fromRoot.AppState {
+  auth: AuthState;
+}
+
+export const selectAuthState = createFeatureSelector<State, AuthState>(
+  FEATURE_NAME
+);

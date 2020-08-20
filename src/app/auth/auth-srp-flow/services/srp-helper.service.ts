@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../environments';
 import * as CryptoJS from 'crypto-js/core';
 import SHA256 from 'crypto-js/sha256';
 import { Observable } from 'rxjs';
 import HmacSHA256 from 'crypto-js/hmac-sha256';
 import Base64 from 'crypto-js/enc-base64';
-import { InitiateLoginChallengeParameters } from '../model/initiate-login-challenge-parameters.model';
 import { AuthenticationData } from '../model/authentication-data.model';
 import 'crypto-js/lib-typedarrays';
+import { environment } from 'src/environments';
+import { InitiateLoginChallengeParameters } from '../model/initiate-login-challenge-parameters.model';
 var bigInt = require('big-integer');
 var Buffer = require('buffer').Buffer;
 
@@ -266,5 +266,10 @@ export class SrpHelperService {
     let test = HmacSHA256(message, formattedKey);
     const signatureString = Base64.stringify(test);
     return signatureString;
+  }
+
+  hashPayload(payload: any): string {
+    const hash = CryptoJS.SHA256(payload).toString(CryptoJS.enc.Hex);
+    return hash;
   }
 }

@@ -1,17 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-
-import { CustomAuthService } from '../../services/custom-auth.service';
 import { Store } from '@ngrx/store';
-import { customAuthInitiateLogin } from '../../store/auth.actions';
+import * as SrpAuthActions from '../../store/srp-auth.actions';
 
 @Component({
-  selector: 'app-custom-login',
-  templateUrl: './custom-login.component.html',
-  styleUrls: ['./custom-login.component.css']
+  selector: 'app-srp-login',
+  templateUrl: './srp-login.component.html',
+  styleUrls: ['./srp-login.component.css']
 })
-export class CustomLoginComponent implements OnInit {
+export class SrpLoginComponent implements OnInit {
   public loginForm: FormGroup;
 
   constructor(
@@ -28,9 +26,10 @@ export class CustomLoginComponent implements OnInit {
   }
 
   onSubmitLogin(value: any) {
-    const email = value.email;
+    const username = value.email;
     const password = value.password;
-    //this.customAuthService.initiateLogIn(email, password);
-    this.store.dispatch(customAuthInitiateLogin({ email, password }));
+    this.store.dispatch(
+      SrpAuthActions.initiateSrpAuthLogin({ authData: { username, password } })
+    );
   }
 }

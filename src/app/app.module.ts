@@ -4,14 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { HelloComponent } from './components/hello/hello.component';
 import { MatButtonModule } from '@angular/material/button';
 import { StoreModule } from '@ngrx/store';
-import { reducers } from './app.state';
 import { AppRoutingModule } from './app-routing.module';
 import { AuthModule } from './auth/auth.module';
 import { LandingComponent } from './components/landing/landing.component';
 import { AppComponent } from './components/app/app.component';
 import { SampleAuthorizedComponent as AuthorizedComponent } from './components/sample-authorized/sample-authorized.component';
 import { EffectsModule } from '@ngrx/effects';
-import { AuthEffects } from './auth/store/auth.effects';
 import { HttpClientModule } from '@angular/common/http';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments';
@@ -28,8 +26,8 @@ import { environment } from '../environments';
     AuthModule,
 
     //ngrx
-    EffectsModule.forRoot([AuthEffects]),
-    StoreModule.forRoot(reducers),
+    StoreModule.forRoot({}),
+    EffectsModule.forRoot([]),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: environment.production
