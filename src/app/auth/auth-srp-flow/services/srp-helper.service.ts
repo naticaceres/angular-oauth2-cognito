@@ -273,11 +273,69 @@ export class SrpHelperService {
     return hash;
   }
 
-  keyedHash256(payload: any, key: string) {
-    return CryptoJS.HmacSHA256(payload, key);
+  hmacSha256AsBytes(toSign, key) {
+    return CryptoJS.HmacSHA256(key, toSign, { asBytes: true });
   }
 
-  hexKeyedHash256(signing, tosign) {
-    return CryptoJS.HmacSHA256(signing, tosign).toString(CryptoJS.enc.Hex);
+  keyedHash256(key: any, payload: any) {
+    return CryptoJS.HmacSHA256(key, payload, { asBytes: true });
+  }
+
+  hexKeyedHash256(key, payload) {
+    const hash = this.keyedHash256(key, payload).toString();
+    return hash;
+  }
+
+  /**
+   * Converts a Uint8Array to a word array.
+   *
+   * @param {string} u8Str The Uint8Array.
+   *
+   * @return {WordArray} The word array.
+   *
+   * @static
+   *
+   * @example
+   *
+   *     var wordArray = CryptoJS.enc.u8array.parse(u8arr);
+   */
+  digestUint8Array(u8arr) {
+    var len = u8arr.length;
+
+    // Convert
+    var words = [];
+    for (var i = 0; i < len; i++) {
+      words[i >>> 2] |= (u8arr[i] & 0xff) << (24 - (i % 4) * 8);
+    }
+
+    return (CryptoJS.lib.WordArray as any).create(words, len);
+  }
+
+  /**
+   * Converts a word array to a Uint8Array.
+   *
+   * @param {WordArray} wordArray The word array.
+   *
+   * @return {Uint8Array} The Uint8Array.
+   *
+   * @static
+   *
+   * @example
+   *
+   *     var u8arr = CryptoJS.enc.u8array.stringify(wordArray);
+   */
+  digestWordArray(wordArray) {
+    // Shortcuts
+    var words = wordArray.words;
+    var sigBytes = wordArray.sigBytes;
+
+    // Convert
+    var u8 = new Uint8Array(sigBytes);
+    for (var i = 0; i < sigBytes; i++) {
+      var byte = (words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
+      u8[i] = byte;
+    }
+
+    return u8;
   }
 }

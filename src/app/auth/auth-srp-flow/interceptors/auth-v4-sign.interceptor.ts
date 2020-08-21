@@ -17,6 +17,7 @@ import {
   selectAccessKeyId
 } from '../store/srp-auth.selectors';
 import { tap, withLatestFrom, first, map, mergeMap } from 'rxjs/operators';
+const CryptoJS = require('crypto-js');
 
 const V4_SIGNATURE_EXCEPTED_URLS = [
   `cognito-idp.${environment.Auth.srpFlow.region}.amazonaws.com`,
@@ -28,7 +29,7 @@ const amzDateHeader = 'x-amz-date';
 const amzSecurityTokenHeader = 'x-amz-security-token';
 const authorizationHeader = 'authorization';
 const awsService = 'execute-api';
-const v4Request = 'aws4_request';
+const SIGNATURE_TYPE = 'aws4_request';
 const AUTH_HEADER_ALGORITHM = 'AWS4-HMAC-SHA256';
 
 @Injectable()
@@ -51,16 +52,12 @@ export class AuthV4SignInterceptor implements HttpInterceptor {
     }
 
     const nowDate = new Date(Date.now());
-    const iso8601Date = this.datePipe.transform(
+    let iso8601Date = this.datePipe.transform(
       nowDate,
       "yyyyMMdd'T'HHmmss'Z'",
       '+0000'
     );
-    const shortDateString = this.datePipe.transform(
-      nowDate,
-      'yyyyMMdd',
-      '+0000'
-    );
+    let shortDateString = this.datePipe.transform(nowDate, 'yyyyMMdd', '+0000');
 
     return this.store.select(selectSessionToken).pipe(
       withLatestFrom(
@@ -105,6 +102,7 @@ export class AuthV4SignInterceptor implements HttpInterceptor {
 
         const authorizedRequest = request.clone({
           headers: request.headers
+            //.set('host', environment.apiDomain.replace('https://', ''))
             .set(amzDateHeader, iso8601Date)
             .set(amzSecurityTokenHeader, sessionToken)
             .set(authorizationHeader, authorizationHeaderValue)
@@ -145,6 +143,7 @@ export class AuthV4SignInterceptor implements HttpInterceptor {
       canonicalQueryString +
       NEWLINE +
       stringCanonicalHeaders +
+      NEWLINE +
       NEWLINE +
       signedHeaders +
       NEWLINE +
@@ -196,6 +195,10 @@ export class AuthV4SignInterceptor implements HttpInterceptor {
     shortDateString: string,
     canonicalRequest: string
   ): string {
+    const hashedCanonicalRequest = this.srpHelperService.hashPayload(
+      canonicalRequest
+    );
+
     const stringToSign =
       AUTH_HEADER_ALGORITHM +
       NEWLINE +
@@ -204,9 +207,10 @@ export class AuthV4SignInterceptor implements HttpInterceptor {
       shortDateString +
       '/' +
       environment.Auth.srpFlow.region +
-      `/${awsService}/${v4Request}` +
-      NEWLINE;
-    this.srpHelperService.hashPayload(canonicalRequest);
+      `/${awsService}/${SIGNATURE_TYPE}` +
+      NEWLINE +
+      hashedCanonicalRequest;
+
     return stringToSign;
   }
 
@@ -215,29 +219,36 @@ export class AuthV4SignInterceptor implements HttpInterceptor {
     shortDateString: string,
     stringToSign: string
   ): string {
-    const dateKey = this.srpHelperService.keyedHash256(
-      'AWS4' + secretKey,
+    // let r1 = this.hmacSha256(`AWS4${secretKey}`, shortDateString);
+    // let r2 = this.hmacSha256(r1, environment.Auth.srpFlow.region);
+    // let r3 = this.hmacSha256(r2, awsService);
+    // let r4 = this.hmacSha256(r3, SIGNATURE_TYPE);
+    // let final = this.hmacSha256(r4, stringToSign);
+    // let finalStr = final.toString();
+
+    const dateKey = this.srpHelperService.hmacSha256AsBytes(
+      `AWS4${secretKey}`,
       shortDateString
     );
-    const dateRegionKey = this.srpHelperService.keyedHash256(
+    const dateRegionKey = this.srpHelperService.hmacSha256AsBytes(
       dateKey,
       environment.Auth.srpFlow.region
     );
-    const dateRegionServiceKey = this.srpHelperService.keyedHash256(
+    const dateRegionServiceKey = this.srpHelperService.hmacSha256AsBytes(
       dateRegionKey,
       awsService
     );
-    const signingKey = this.srpHelperService.keyedHash256(
+    const signingKey = this.srpHelperService.hmacSha256AsBytes(
       dateRegionServiceKey,
-      v4Request
+      SIGNATURE_TYPE
     );
 
-    const signature = this.srpHelperService.hexKeyedHash256(
+    const signature = this.srpHelperService.hmacSha256AsBytes(
       signingKey,
       stringToSign
     );
 
-    return signature;
+    return signature.toString();
   }
 
   private getAuthHeaderValue(
@@ -246,9 +257,13 @@ export class AuthV4SignInterceptor implements HttpInterceptor {
     signedHeaders: string,
     signature: string
   ) {
-    const credential = `${accessKey}/${shortDateString}/${environment.Auth.srpFlow.region}/${awsService}/${v4Request}`;
+    const credential = `${accessKey}/${shortDateString}/${environment.Auth.srpFlow.region}/${awsService}/${SIGNATURE_TYPE}`;
     const authValue = `${AUTH_HEADER_ALGORITHM} Credential=${credential}, SignedHeaders=${signedHeaders}, Signature=${signature}`;
     return authValue;
+  }
+
+  private sortAlphabetically(a, b) {
+    return a > b ? 1 : -1;
   }
 }
 
