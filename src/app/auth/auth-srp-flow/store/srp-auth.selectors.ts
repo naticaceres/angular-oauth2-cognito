@@ -15,3 +15,23 @@ export const selectIdentityId = createSelector(
   selectSrpAuthState,
   (state) => state.identityId
 );
+
+export const selectUserName = createSelector(
+  selectSrpAuthState,
+  (state) => state.userName
+);
+
+export const selectSecretAccessKey = createSelector(
+  selectSrpAuthState,
+  (state) => state.secretKey
+);
+
+export const selectAccessKeyId = createSelector(
+  selectSrpAuthState,
+  (state) => state.accessKeyId
+);
+
+export const selectSessionToken = createSelector(
+  selectSrpAuthState,
+  (state) => state.sessionToken
+);

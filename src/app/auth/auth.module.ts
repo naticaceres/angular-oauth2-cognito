@@ -12,16 +12,32 @@ import { SrpAuthService } from './auth-srp-flow/services/srp-auth.service';
 import { CodeLoginComponent } from './auth-code-flow/components/code-login/code-login.component';
 import { StoreModule } from '@ngrx/store';
 import { authReducers, FEATURE_NAME } from './store/auth.reducer';
+import { LoggedInComponent } from './auth-srp-flow/components/logged-in/logged-in.component';
+import { MatButtonModule } from '@angular/material/button';
+import { hostFactory } from './auth-srp-flow/services/host-factory.service';
 
 @NgModule({
   imports: [
+    MatButtonModule,
+
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     StoreModule.forFeature(FEATURE_NAME, authReducers),
     EffectsModule.forFeature([SrpAuthEffects, AuthCodeEffects])
   ],
-  declarations: [CodeLoginComponent, LogoutComponent, SrpLoginComponent],
-  providers: [AuthCodeService, CodeVerifierService, DatePipe, SrpAuthService]
+  declarations: [
+    CodeLoginComponent,
+    LogoutComponent,
+    SrpLoginComponent,
+    LoggedInComponent
+  ],
+  providers: [
+    AuthCodeService,
+    CodeVerifierService,
+    DatePipe,
+    SrpAuthService,
+    { provide: 'HOSTNAME', useFactory: hostFactory }
+  ]
 })
 export class AuthModule {}

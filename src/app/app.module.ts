@@ -10,9 +10,12 @@ import { LandingComponent } from './components/landing/landing.component';
 import { AppComponent } from './components/app/app.component';
 import { SampleAuthorizedComponent as AuthorizedComponent } from './components/sample-authorized/sample-authorized.component';
 import { EffectsModule } from '@ngrx/effects';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments';
+import { AuthV4SignInterceptor } from './auth/auth-srp-flow/interceptors/auth-v4-sign.interceptor';
+import { WINDOW_PROVIDERS } from './providers/window.provider';
+import { HostService } from './services/host.service';
 
 @NgModule({
   imports: [
@@ -32,6 +35,15 @@ import { environment } from '../environments';
       maxAge: 25,
       logOnly: environment.production
     })
+  ],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthV4SignInterceptor,
+      multi: true
+    },
+    WINDOW_PROVIDERS,
+    HostService
   ],
   declarations: [
     AppComponent,

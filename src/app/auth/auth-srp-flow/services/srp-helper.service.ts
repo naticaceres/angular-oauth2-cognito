@@ -272,4 +272,12 @@ export class SrpHelperService {
     const hash = CryptoJS.SHA256(payload).toString(CryptoJS.enc.Hex);
     return hash;
   }
+
+  keyedHash256(payload: any, key: string) {
+    return CryptoJS.HmacSHA256(payload, key);
+  }
+
+  hexKeyedHash256(signing, tosign) {
+    return CryptoJS.HmacSHA256(signing, tosign).toString(CryptoJS.enc.Hex);
+  }
 }

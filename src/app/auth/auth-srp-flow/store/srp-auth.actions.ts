@@ -32,11 +32,15 @@ export const getSrpAuthIdentitySuccess = createAction(
   props<{ identity: AuthIdentity }>()
 );
 
-export const getCredentialsForIdentity = createAction(
+export const authGetCredentialsForIdentity = createAction(
   SECTION + 'Get Credentials For Identity'
 );
 
 export const getCredentialsForIdentitySuccess = createAction(
   SECTION + ' Get Credentials For Identity Success',
   props<{ credentials: AuthIdentityCredentials }>()
+);
+
+export const testAuthorizedRequest = createAction(
+  SECTION + ' Test Authorized Resuqest'
 );
