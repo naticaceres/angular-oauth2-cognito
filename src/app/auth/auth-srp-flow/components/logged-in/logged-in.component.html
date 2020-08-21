@@ -1,3 +1,6 @@
 <h3>Logged in as {{userName$ | async}}</h3>
+<h4>accessKeyId: {{accessKey$ | async}}</h4>
+<h4>secretKey: {{secretKey$ | async}}</h4>
+<h4>sessionToken: {{sessionToken$ | async}} </h4>
 
 <button mat-raised-button (click)="testRequest()">Test Api Request</button>

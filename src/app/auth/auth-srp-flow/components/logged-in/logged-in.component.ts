@@ -11,11 +11,17 @@ import * as SrpAuthActions from '../../store/srp-auth.actions';
 })
 export class LoggedInComponent implements OnInit {
   userName$: Observable<string>;
+  sessionToken$: Observable<string>;
+  secretKey$: Observable<string>;
+  accessKey$: Observable<string>;
 
   constructor(private store: Store) {}
 
   ngOnInit() {
     this.userName$ = this.store.select(SrpAuthSelectors.selectIdentityId);
+    this.sessionToken$ = this.store.select(SrpAuthSelectors.selectSessionToken);
+    this.secretKey$ = this.store.select(SrpAuthSelectors.selectSecretAccessKey);
+    this.accessKey$ = this.store.select(SrpAuthSelectors.selectAccessKeyId);
   }
 
   testRequest() {
