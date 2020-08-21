@@ -6,7 +6,7 @@ import { SrpAuthTokens } from '../model/srp-auth-tokens.model';
 import { InitiateLoginChallenge } from '../model/initiate-login-challenge.model';
 import { DatePipe } from '@angular/common';
 import { AuthenticationData } from '../model/authentication-data.model';
-import { environment } from 'src/environments';
+import { environment } from '../../../../environments';
 import { AuthIdentity } from '../model/auth-identity.model';
 import { AuthIdentityCredentials } from '../model/auth-identity-credentials.model';
 

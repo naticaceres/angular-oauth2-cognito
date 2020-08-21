@@ -6,7 +6,7 @@ import HmacSHA256 from 'crypto-js/hmac-sha256';
 import Base64 from 'crypto-js/enc-base64';
 import { AuthenticationData } from '../model/authentication-data.model';
 import 'crypto-js/lib-typedarrays';
-import { environment } from 'src/environments';
+import { environment } from '../../../../environments';
 import { InitiateLoginChallengeParameters } from '../model/initiate-login-challenge-parameters.model';
 var bigInt = require('big-integer');
 var Buffer = require('buffer').Buffer;

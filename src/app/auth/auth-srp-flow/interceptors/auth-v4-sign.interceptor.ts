@@ -8,7 +8,7 @@ import {
 } from '@angular/common/http';
 import { Observable, noop } from 'rxjs';
 import { SrpHelperService } from '../services/srp-helper.service';
-import { environment } from 'src/environments';
+import { environment } from '../../../../environments';
 import { DatePipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import {

@@ -13,9 +13,9 @@ import {
   catchError,
   filter
 } from 'rxjs/operators';
-import { LocalStorageService } from 'src/app/local-storage/local-storage.service';
+import { LocalStorageService } from '../../../local-storage/local-storage.service';
 import { Router } from '@angular/router';
-import { environment } from 'src/environments';
+import { environment } from '../../../../environments';
 import { of } from 'rxjs';
 
 @Injectable()

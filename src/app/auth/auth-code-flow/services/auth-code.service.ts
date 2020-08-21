@@ -3,7 +3,7 @@ import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { DOCUMENT } from '@angular/common';
 import { Observable } from 'rxjs';
 import { OAuthTokens } from '../model/oauth-tokens.model';
-import { environment } from 'src/environments';
+import { environment } from '../../../../environments';
 
 @Injectable()
 export class AuthCodeService {
